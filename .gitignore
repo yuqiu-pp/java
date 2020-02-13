@@ -2,6 +2,7 @@ smartframework/target
 target
 out
 .idea
+.mvn
 .DS_Store
 
 # Compiled class file
