@@ -12,6 +12,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 
 
 public class NettyHttpClient {
@@ -35,7 +36,7 @@ public class NettyHttpClient {
             b.handler(new NettyHttpClientInitializer());
 
             // host
-            ChannelFuture f = b.connect(url, port).sync();
+            ChannelFuture f = b.connect(getHost(url), port).sync();
 
             f.channel().closeFuture().sync();
         } finally {
@@ -43,12 +44,22 @@ public class NettyHttpClient {
         }
     }
 
+    private String getHost(String url) {
+        try {
+            URI uri = new URI(url);
+            return uri.getPath();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public String getRequest(String url) {
         return null;
     }
 
     public static void main(String[] args) throws InterruptedException {
-        NettyHttpClient client = new NettyHttpClient("localhost", 8801);
+        NettyHttpClient client = new NettyHttpClient("127.0.0.1", 8801);
         client.start();
     }
 }
